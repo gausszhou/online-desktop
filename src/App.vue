@@ -1,85 +1,74 @@
 <template>
   <div id="app" class="fake-desktop-background">
-    <VueDragResize
-      v-show="neteaseShow"
-      id="music-box"
-      :active="true"
-      :prevent-deactivation="true"
-      :draggable="true"
-      :drag-handle="'.drag-handle'"
-      :resizable="true"
-      :x="100"
-      :y="50"
-      :z="2"
-      :w="1020"
-      :h="576"
-      :min-width="1024"
-      :min-height="576"
-    >
-      <div class="box-container" >
-        <topBar />
-          <homeVue />
-          <bottomBar />
-        <!-- <iframe src="//gausszhou.top"  width="100%" height="100%"></iframe> -->
-      </div>
-    </VueDragResize>
     <div class="fake-desktop-icon">
       <div id="recovery" @dblclick="trick"></div>
-      <div id="netease" @dblclick="toggleNeteaseShow"></div>
+      <div id="netease" @dblclick="openAppWindow('netease')"></div>
+      <div id="gausszhou" @dblclick="openAppWindow('gausszhou')"></div>
     </div>
     <div class="fake-desktop-bottom"></div>
-    <div id="mask" v-if="!isAgree">
-      <div class="mask-content">
-        <div class="mask-title">Link Start</div>
-        <span class="agree-button-group" @click="agree()">
-          <button>是</button>
-          <button>同意</button>
-        </span>
-      </div>
-    </div>
+    <TaskWindow
+      v-for="item in taskList"
+      :key="item.name"
+      :name="item.name"
+      :url="item.url"
+      :z="item.z"
+    />
+    <DesktopMask v-if="!isAgree" @agree="agree" />
   </div>
 </template>
 
 <script>
-window.oncontextmenu = (e) => {
-  e.preventDefault()
-}
+// window.oncontextmenu = (e) => {
+//   e.preventDefault()
+// }
 
-import topBar from './common/topBar'
-import homeVue from './common/home'
-import bottomBar from './common/bottomBar'
+import TaskWindow from "@/components/TaskWindow"
+import DesktopMask from "@/components/DesktopMask"
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    topBar,
-    homeVue,
-    bottomBar
+    DesktopMask,
+    TaskWindow
   },
   data() {
     return {
-      neteaseShow: false,
-      isAgree: false
-    }
-  },
-  watch: {
-    // 报错消息
-    '$store.state.message': {
-      handler(newV) {
-        this.$message({
-          message: newV,
-          type: 'error'
-        })
+      isAgree: true,
+      taskList: [],
+      appMap: {
+        netease: {
+          name: "网易云音乐",
+          url: "//start.gausszhou.top/netease/"
+        },
+        gausszhou: {
+          name: "Gauss Zhou",
+          url: "//gausszhou.top"
+        }
       }
     }
   },
   methods: {
-    toggleNeteaseShow() {
-      this.neteaseShow = true
+    openAppWindow(key) {
+      const app = this.appMap[key]
+      if (app) {
+        let index = this.taskList.findIndex((item) => item.key == key)
+        let ZIndexMax = Math.max(...this.taskList.map((item) => item.z)) || 0
+        if (index == -1) {
+          this.taskList.push({
+            key,
+            name: app.name,
+            url: app.url,
+            z: ZIndexMax + 1
+          })
+          console.log(this.taskList)
+        } else {
+          // sort to top
+        }
+      }
     },
     trick() {
       document.exitFullscreen()
-      this.$message.warning('哈哈，你被骗了')
+      this.$message.warning("什么也没有发生，这只是一个网页")
     },
     agree() {
       this.$el
@@ -88,10 +77,9 @@ export default {
           this.isAgree = true
         })
         .catch(() => {
-          window.alert('您没有内测资格')
+          window.alert("您没有内测资格")
         })
     }
   }
 }
 </script>
-
