@@ -1,22 +1,28 @@
 <template>
+  <!-- :prevent-deactivation="true" -->
   <VueDragResize
     :active="true"
-    :prevent-deactivation="true"
-    :draggable="true"
     :drag-handle="'.drag-handle'"
-    :resizable="true"
+    :draggable="true"
+    :resizable="false"
     :x="100"
     :y="50"
-    :z="z"
-    :w="1020"
-    :h="576"
+    :z="zIndex"
+    :w="1200"
+    :h="675"
     :min-width="1024"
     :min-height="576"
   >
     <div class="app-window">
-      <TaskWindowHeader class="app-window-header" :name="name" />
+      <TaskWindowHeader
+        class="app-window-header"
+        :name="appName"
+        @minimize="minimize"
+        @maximize="maximize"
+        @close="close"
+      />
       <div class="app-window-body">
-        <iframe :src="url" width="100%" height="100%"></iframe>
+        <iframe :src="appUrl" width="100%" height="100%"></iframe>
       </div>
     </div>
   </VueDragResize>
@@ -30,27 +36,32 @@ export default {
     TaskWindowHeader
   },
   props: {
-    name: {
+    appKey: {
       type: String,
       default: ""
     },
-    url: {
+    appName: {
       type: String,
       default: ""
     },
-    z: {
+    appUrl: {
+      type: String,
+      default: ""
+    },
+    zIndex: {
       type: Number,
       default: 1
     }
   },
   methods: {
-    // 最小化
-    // 关闭
     minimize() {
-      this.$emit("minmize")
+      this.$emit("minimize", this.appKey)
+    },
+    maximize() {
+      this.$emit("maximize", this.appKey)
     },
     close() {
-      this.$emit("close")
+      this.$emit("closeAppWindow", this.appKey)
     }
   }
 }
@@ -64,5 +75,4 @@ export default {
 .app-window-body {
   height: calc(100% - 40px);
 }
-
 </style>

@@ -1,9 +1,25 @@
 <template>
   <div class="window-header">
-    <h2 class="window-name drag-handle">{{ name }}</h2>
+    <h2 class="window-name drag-handle"></h2>
     <div class="window-button-group">
-      <button @click="minimize">最小化</button>
-      <button @click="close">关闭</button>
+      <img
+        class="window-button-image minimize"
+        :src="require('@/assets/images/window/window-minimize.png')"
+        @click="minimize"
+
+      />
+      <img
+        class="window-button-image maximize"
+        :src="require('@/assets/images/window/window-maximize.png')"
+        @click="maximize"
+
+      />
+      <img
+        class="window-button-image close"
+        :src="require('@/assets/images/window/window-close.png')"
+        @click="close"
+
+      />
     </div>
   </div>
 </template>
@@ -17,11 +33,14 @@ export default {
       default: ""
     }
   },
-  methods:{
-    minimize(){
+  methods: {
+    minimize() {
       this.$emit("minimize")
     },
-    close(){
+    maximize() {
+      this.$emit("maximize")
+    },
+    close() {
       this.$emit("close")
     }
   }
@@ -33,22 +52,28 @@ export default {
   height: 36px;
   width: 100%;
   display: flex;
-  padding: 0 1rem;
   box-sizing: border-box;
   align-items: center;
-  background-color: #e7eaed;
+  background-color: #dee1e6;
 }
 .window-name {
-  flex:1;
+  flex: 1;
   height: 100%;
   font-size: 18px;
   font-weight: 700;
   display: flex;
   align-items: center;
-  color: #1d3233; 
+  color: #1d3233;
+  border-top: 1px solid #626869;
 }
-.window-button-group{
+.window-button-group {
   display: flex;
   align-items: center;
+}
+.window-button-image:hover {
+  filter: invert(10%);
+}
+.close:hover {
+  filter: invert(100%);
 }
 </style>

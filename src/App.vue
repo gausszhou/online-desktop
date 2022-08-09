@@ -1,34 +1,36 @@
 <template>
-  <div id="app" class="fake-desktop-background">
-    <div class="fake-desktop-icon">
-      <div id="recovery" @dblclick="trick"></div>
-      <div id="netease" @dblclick="openAppWindow('netease')"></div>
-      <div id="gausszhou" @dblclick="openAppWindow('gausszhou')"></div>
-    </div>
-    <div class="fake-desktop-bottom"></div>
+  <div id="app" class="desktop-background">
+    <DesktopShortcut :shortcutList="appList" @openAppWindow="openAppWindow" />
+    <DesktopDock :dockList="taskList" @openAppWindow="openAppWindow" />
     <TaskWindow
       v-for="item in taskList"
-      :key="item.name"
-      :name="item.name"
-      :url="item.url"
-      :z="item.z"
+      :key="item.key"
+      :appKey="item.key"
+      :appName="item.name"
+      :appUrl="item.url"
+      :zIndex="item.z"
+      @closeAppWindow="closeAppWindow"
     />
-    <DesktopMask v-if="!isAgree" @agree="agree" />
   </div>
 </template>
 
 <script>
-// window.oncontextmenu = (e) => {
-//   e.preventDefault()
-// }
+window.oncontextmenu = (e) => {
+  e.preventDefault()
+}
 
+// import DesktopMask from "@/components/DesktopMask"
+
+import DesktopShortcut from "@/components/DesktopShortcut"
+import DesktopDock from "@/components/DesktopDock"
 import TaskWindow from "@/components/TaskWindow"
-import DesktopMask from "@/components/DesktopMask"
 
 export default {
   name: "App",
   components: {
-    DesktopMask,
+    // DesktopMask,
+    DesktopShortcut,
+    DesktopDock,
     TaskWindow
   },
   data() {
@@ -37,14 +39,18 @@ export default {
       taskList: [],
       appMap: {
         netease: {
+          key: "netease",
           name: "网易云音乐",
-          url: "//start.gausszhou.top/netease/"
-        },
-        gausszhou: {
-          name: "Gauss Zhou",
-          url: "//gausszhou.top"
+          url: "//start.gausszhou.top/netease/",
+          shortcut: require("@/assets/images/shortcut/netease.png"),
+          dock: require("@/assets/images/dock/dock-netease.png")
         }
       }
+    }
+  },
+  computed: {
+    appList() {
+      return Object.keys(this.appMap).map((key) => this.appMap[key])
     }
   },
   methods: {
@@ -52,7 +58,7 @@ export default {
       const app = this.appMap[key]
       if (app) {
         let index = this.taskList.findIndex((item) => item.key == key)
-        let ZIndexMax = Math.max(...this.taskList.map((item) => item.z)) || 0
+        let ZIndexMax = Math.max(...this.taskList.map((item) => item.z), 0)
         if (index == -1) {
           this.taskList.push({
             key,
@@ -66,19 +72,8 @@ export default {
         }
       }
     },
-    trick() {
-      document.exitFullscreen()
-      this.$message.warning("什么也没有发生，这只是一个网页")
-    },
-    agree() {
-      this.$el
-        .requestFullscreen()
-        .then(() => {
-          this.isAgree = true
-        })
-        .catch(() => {
-          window.alert("您没有内测资格")
-        })
+    closeAppWindow(key) {
+      this.taskList = this.taskList.filter((item) => item.key !== key)
     }
   }
 }
