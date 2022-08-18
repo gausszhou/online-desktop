@@ -49,12 +49,14 @@ export default {
 
 <style>
 .window-header {
-  height: 36px;
+  height: 37px;
   width: 100%;
   display: flex;
   box-sizing: border-box;
   align-items: center;
   background-color: #dee1e6;
+   border-top: 1px solid #626869;
+   overflow: hidden;
 }
 .window-name {
   flex: 1;
