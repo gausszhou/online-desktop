@@ -1,4 +1,4 @@
-// 引入reset.scss 解决浏览器兼容问题
+// 引入 reset.scss 解决浏览器兼容问题
 @import "./config-reset.scss";
 // 引入原子类样式
 @import "./config-atom.scss";
@@ -13,6 +13,7 @@
   border: none !important;
   transition: all .3s ease-out;
 }
+
 .vue-drr-box.dragging{
   transition: none;
 }
@@ -30,15 +31,24 @@
   flex-direction: column;
 
   .shortcut-icon {
-
     width: 74px;
     margin-top: 16px;
-    padding-top: 2px;
-
+    padding-top: 16px;
     &:hover,
     &:active {
       box-shadow: 0 0 1px 2px #58acb5;
       background-color: #1f909c;
     }
+  }
+}
+
+.shortcut-icon {
+  .icon-image {
+    width: 100%;
+  }
+  .icon-text {
+    color: #f1f1f1;
+    font-size: 13px;
+    text-align: center;
   }
 }

@@ -1,21 +1,25 @@
 <template>
   <div class="window-header">
-    <h2 class="window-name drag-handle"></h2>
+    <h2 class="window-name drag-handle" @dblclick.stop="maximize"></h2>
     <div class="window-button-group">
       <img
         class="window-button-image minimize"
         :src="require('@/assets/images/window/window-minimize.png')"
-        @click="minimize"
+        @click.stop="minimize"
       />
       <img
         class="window-button-image maximize"
-        :src=" size == 'default' ? require('@/assets/images/window/window-maximize.png'):require('@/assets/images/window/window-default.png')"
-        @click="maximize"
+        :src="
+          size == 'default'
+            ? require('@/assets/images/window/window-maximize.png')
+            : require('@/assets/images/window/window-default.png')
+        "
+        @click.stop="maximize"
       />
       <img
         class="window-button-image close"
         :src="require('@/assets/images/window/window-close.png')"
-        @click="close"
+        @click.stop="close"
       />
     </div>
   </div>

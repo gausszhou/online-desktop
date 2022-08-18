@@ -53,14 +53,14 @@ export default {
       this.timer = null
     },
     calcDock(item) {
-      if (item.runMode == "back") return item.dockBack
-      if (item.runMode == "foreg") return item.dockForeg
+      if (item.runMode === "back") return item.dockBack
+      if (item.runMode === "foreg") return item.dockForeg
       console.log(item.runMode)
       console.error("runMode Error")
     },
     changeRunMode(item) {
       let { key, runMode } = item
-      runMode = runMode == "foreg" ? "back" : "foreg"
+      runMode = runMode === "foreg" ? "back" : "foreg"
       this.$emit("changeRunMode", key, runMode)
     }
   }

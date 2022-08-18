@@ -1,13 +1,13 @@
 <template>
   <div class="desktop-shortcut">
-    <img
-     class="shortcut-icon"
+    <div
+      class="shortcut-icon"
       v-for="(item, index) in list"
       :key="index"
-      :src="item.shortcut"
-      alt=""
-      @dblclick="openAppWindow(item.key)"
-    />
+      @dblclick="openAppWindow(item)"
+    >
+      <img class="icon-image" :src="item.shortcut" :alt="item.name" />
+ </div>
   </div>
 </template>
 
@@ -21,8 +21,8 @@ export default {
     }
   },
   methods: {
-    openAppWindow(key) {
-      this.$emit("openAppWindow", key)
+    openAppWindow(item) {
+      this.$emit("openAppWindow", item)
     }
   }
 }

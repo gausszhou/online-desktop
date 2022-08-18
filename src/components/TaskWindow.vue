@@ -1,27 +1,30 @@
 <template>
   <VueDragResize
+    class-name-dragging="dragging"
     :active="true"
     :drag-handle="'.drag-handle'"
     :draggable="true"
     :resizable="false"
-    class-name-dragging="dragging"
     :x="x"
     :y="y"
     :w="w"
     :h="h"
     :z="zIndex"
+    @dragging="onDragging"
+    @dragstop="onDragstop"
   >
     <div class="app-window">
+      
       <TaskWindowHeader
         class="app-window-header"
         :name="appName"
         :size="size"
-        @dblclick.native="maximize"
         @minimize="minimize"
         @maximize="maximize"
         @close="close"
       />
       <div class="app-window-body">
+        <div class="app-window-mask" v-if="isDragging"></div>
         <iframe :src="appUrl" width="100%" height="100%"></iframe>
       </div>
     </div>
@@ -71,35 +74,36 @@ export default {
       y: 20,
       w: 800,
       h: 600,
+      back_x: 0,
+      back_y: 0,
+      back_w: 800,
+      back_h: 600,
       windowWidth: 1920,
-      windowHeight: 1080
+      windowHeight: 1080,
+      isDragging: false
     }
   },
   watch: {
     size() {
-      this.onResize()
+      this.onSizeChagne()
     },
     runMode() {
-      this.onResize()
+      this.onModeChange()
     }
   },
   mounted() {
-    this.onResize()
+    this.onWindowResize()
     window.addEventListener("resize", () => {
-      this.onResize()
+      this.onWindowResize()
     })
   },
   methods: {
-    onResize() {
+    onWindowResize() {
       this.windowWidth = window.innerWidth
       this.windowHeight = window.innerHeight
-      this.calcSize()
     },
-    calcSize() {
+    onSizeChagne() {
       const size = this.size
-      const mode = this.runMode
-      const index = this.index
-      const DOCK_WIDTH = 45
       const MAX_WIDTH = this.windowWidth
       const MAX_HEIGHT = this.windowHeight - 40
       const MARGIN = 20
@@ -124,13 +128,35 @@ export default {
           console.error("size Error")
           break
       }
+      this.back_x = this.x
+      this.back_y = this.y
+      this.back_w = this.w
+      this.back_h = this.h
+    },
+    onModeChange() {
+      const index = this.index
+      const mode = this.runMode
+      const DOCK_WIDTH = 45
+      const MAX_HEIGHT = this.windowHeight - 40
       if (mode == "back") {
         this.x = DOCK_WIDTH * (index + 3)
         this.y = MAX_HEIGHT
-        this.w = 0
+        this.w = 1
         this.h = 1
+      } else {
+        this.x = this.back_x
+        this.y = this.back_y
+        this.w = this.back_w
+        this.h = this.back_h
       }
-      console.log(this.x, this.y)
+    },
+    onDragging() {
+      this.isDragging = true
+    },
+    onDragstop(x, y) {
+      this.isDragging = false
+      this.back_x = x
+      this.back_y = y
     },
     minimize() {
       this.$emit("changeRunMode", this.appKey, "back")
@@ -150,9 +176,21 @@ export default {
 <style lang="scss" scoped>
 .app-window {
   width: 100%;
-  height: 100%;
+height: 100%;
 }
 .app-window-body {
+  height: 100%;
+  position: relative;
   height: calc(100% - 40px);
 }
+.app-window-mask {
+  background: transparent;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
 </style>
