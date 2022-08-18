@@ -1,5 +1,4 @@
 <template>
-  <!-- :prevent-deactivation="true" -->
   <VueDragResize
     :active="true"
     :drag-handle="'.drag-handle'"
@@ -49,6 +48,10 @@ export default {
       type: String,
       default: ""
     },
+    index: {
+      type: Number,
+      default: 0
+    },
     zIndex: {
       type: Number,
       default: 1
@@ -56,6 +59,10 @@ export default {
     size: {
       type: String,
       default: "default"
+    },
+    runMode: {
+      type: String,
+      default: "foreg"
     }
   },
   data() {
@@ -69,8 +76,11 @@ export default {
     }
   },
   watch: {
-    size(newV) {
-      this.calcSize(newV)
+    size() {
+      this.onResize()
+    },
+    runMode() {
+      this.onResize()
     }
   },
   mounted() {
@@ -83,23 +93,21 @@ export default {
     onResize() {
       this.windowWidth = window.innerWidth
       this.windowHeight = window.innerHeight
-      this.calcSize(this.size)
+      this.calcSize()
     },
-    calcSize(size) {
+    calcSize() {
+      const size = this.size
+      const mode = this.runMode
+      const index = this.index
+      const DOCK_WIDTH = 45
       const MAX_WIDTH = this.windowWidth
       const MAX_HEIGHT = this.windowHeight - 40
-      const MARGIN = 50
+      const MARGIN = 20
       switch (size) {
-        case "mini":
-          this.x = -1
-          this.y = -1
-          this.w = 1
-          this.h = 1
-          break
         case "default":
           const w = Math.min(1200, MAX_WIDTH - MARGIN * 2)
-          const x = (MAX_WIDTH - w) / 2
           const h = Math.min(675, MAX_HEIGHT - MARGIN * 2)
+          const x = (MAX_WIDTH - w) / 2
           const y = (MAX_HEIGHT - h) / 2
           this.x = x
           this.y = y
@@ -107,23 +115,29 @@ export default {
           this.h = h
           break
         case "max":
-          this.x = 0
-          this.y = 0
           this.w = MAX_WIDTH
           this.h = MAX_HEIGHT
+          this.y = 0
+          this.x = 0
           break
         default:
+          console.error("size Error")
           break
       }
+      if (mode == "back") {
+        this.x = DOCK_WIDTH * (index + 3)
+        this.y = MAX_HEIGHT
+        this.w = 0
+        this.h = 1
+      }
+      console.log(this.x, this.y)
     },
     minimize() {
-      this.$emit("changeSize", this.appKey, "mini")
+      this.$emit("changeRunMode", this.appKey, "back")
     },
     maximize() {
-      let size = ""
-      if (this.size == "default") size = "max"
-      if (this.size == "max") size = "default"
-      if (this.size == "mini") size = "default"
+      let size = this.size
+      size = size == "default" ? "max" : "default"
       this.$emit("changeSize", this.appKey, size)
     },
     close() {

@@ -1,16 +1,19 @@
 <template>
   <div id="app" class="desktop-background">
     <DesktopShortcut :list="appList" @openAppWindow="openAppWindow" />
-    <DesktopDock :list="taskList" @recoveryAppWindow="recoveryAppWindow" />
+    <DesktopDock :list="taskList" @changeRunMode="changeRunMode" />
     <TaskWindow
-      v-for="item in taskList"
+      v-for="(item,index) in taskList"
+      :index="index"
       :key="item.key"
       :appKey="item.key"
       :appName="item.name"
       :appUrl="item.url"
       :zIndex="item.z"
       :size="item.size"
-      @changeSize="changeWindow"
+      :runMode="item.runMode"
+      @changeSize="changeSize"
+      @changeRunMode="changeRunMode"
       @close="closeAppWindow"
     />
   </div>
@@ -45,9 +48,10 @@ export default {
           name: "网易云音乐",
           url: "//music.gausszhou.top/netease/",
           shortcut: require("@/assets/images/shortcut/netease.png"),
-          dock: require("@/assets/images/dock/dock-netease.png"),
+          dockForeg: require("@/assets/images/dock/dock-netease-foreg.png"),
           dockBack: require("@/assets/images/dock/dock-netease-back.png"),
-          size: "default" // mini default max
+          size: "default", // default max
+          runMode: "foreg" // foreg back
         }
       }
     }
@@ -62,28 +66,30 @@ export default {
       const app = this.appMap[key]
       if (app) {
         let index = this.taskList.findIndex((item) => item.key == key)
-        let ZIndexMax = Math.max(...this.taskList.map((item) => item.z), 0)
+        let zIndexMax = Math.max(...this.taskList.map((item) => item.z), 0)
         if (index == -1) {
           this.taskList.push({
             ...app,
             key,
-            z: ZIndexMax + 1
+            z: zIndexMax + 1
           })
         } else {
-          this.recoveryAppWindow(key)
+          this.changeRunMode(key, "foreg")
         }
       }
     },
-    changeWindow(key, size) {
+    closeAppWindow(key) {
+      this.taskList = this.taskList.filter((item) => item.key !== key)
+    },
+    changeSize(key, size) {
+      console.log(key, size)
       let index = this.taskList.findIndex((item) => (item.key = key))
       this.taskList[index].size = size
     },
-    recoveryAppWindow(key) {
-      let index = this.taskList.findIndex((item) => (item.key = key))
-      this.taskList[index].size = "default"
-    },
-    closeAppWindow(key) {
-      this.taskList = this.taskList.filter((item) => item.key !== key)
+    changeRunMode(key, runMode) {
+      console.log(key, runMode)
+      const index = this.taskList.findIndex((item) => (item.key = key))
+      this.taskList[index].runMode = runMode
     }
   }
 }

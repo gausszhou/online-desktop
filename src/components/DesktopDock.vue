@@ -3,7 +3,12 @@
     <img :src="require('@/assets/images/dock/dock-windows.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-search.png')" alt="" />
     <div class="dock-list">
-      <img v-for="item in list" :key="item.key" :src="calcDock(item)" alt="" @click="recoveryAppWindow(item.key)">
+      <img
+        v-for="item in list"
+        :key="item.key"
+        :src="calcDock(item)"
+        @click="changeRunMode(item)"
+      />
     </div>
     <img :src="require('@/assets/images/dock/dock-battery.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-network.png')" alt="" />
@@ -23,12 +28,16 @@ export default {
     }
   },
   methods: {
-    calcDock(item){
-      if(item.size == "mini") return item.dockBack
-      return item.dock
+    calcDock(item) {
+      if (item.runMode == "back") return item.dockBack
+      if (item.runMode == "foreg") return item.dockForeg
+      console.log(item.runMode)
+      console.error("runMode Error")
     },
-    recoveryAppWindow(key) {
-      this.$emit("recoveryAppWindow", key)
+    changeRunMode(item) {
+      let { key, runMode } = item
+      runMode = runMode == "foreg" ? "back" : "foreg"
+      this.$emit("changeRunMode", key, runMode)
     }
   }
 }

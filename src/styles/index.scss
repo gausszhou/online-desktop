@@ -11,6 +11,7 @@
 
 .vue-drr-box {
   border: none !important;
+  transition: all .3s ease-out;
 }
 
 .desktop-background {
@@ -19,17 +20,17 @@
 
 .desktop-shortcut {
   position: absolute;
-  left: 0;
+  left: 4px;
   top: 0;
   width: 74px;
   display: flex;
   flex-direction: column;
-  padding-top: 16px;
+
   .shortcut-icon {
+
     width: 74px;
-    height: 56px;
-    box-sizing: border-box;
     margin-top: 16px;
+    padding-top: 2px;
 
     &:hover,
     &:active {
@@ -38,4 +39,3 @@
     }
   }
 }
-
