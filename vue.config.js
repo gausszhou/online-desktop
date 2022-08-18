@@ -7,7 +7,7 @@ module.exports = {
   outputDir: 'dist',
   assetsDir:'static',
   // 配置相对路径
-  publicPath: process.env.NODE_ENV === "production" ? "/desktop/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/project/online-desktop/" : "/",
   // 取消生成map文件
   productionSourceMap: false,
   // 去除文件哈希值
