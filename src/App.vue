@@ -46,7 +46,7 @@ export default {
         netease: {
           key: "netease",
           name: "网易云音乐",
-          url: "//music.gausszhou.top/netease/",
+          url: "//www.gausszhou.top/project/online-music/",
           shortcut: require("@/assets/images/shortcut/netease.png"),
           dockForeg: require("@/assets/images/dock/dock-netease-foreg.png"),
           dockBack: require("@/assets/images/dock/dock-netease-back.png"),
