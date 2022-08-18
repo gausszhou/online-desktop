@@ -15,6 +15,7 @@
       <TaskWindowHeader
         class="app-window-header"
         :name="appName"
+        :size="size"
         @dblclick.native="maximize"
         @minimize="minimize"
         @maximize="maximize"

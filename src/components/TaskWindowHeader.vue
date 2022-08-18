@@ -9,7 +9,7 @@
       />
       <img
         class="window-button-image maximize"
-        :src="require('@/assets/images/window/window-maximize.png')"
+        :src=" size == 'default' ? require('@/assets/images/window/window-maximize.png'):require('@/assets/images/window/window-default.png')"
         @click="maximize"
       />
       <img
@@ -25,6 +25,10 @@
 export default {
   name: "TaskWindowHeader",
   props: {
+    size: {
+      type: String,
+      default: "default"
+    },
     name: {
       type: String,
       default: ""
