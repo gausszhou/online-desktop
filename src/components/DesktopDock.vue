@@ -3,7 +3,7 @@
     <img :src="require('@/assets/images/dock/dock-windows.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-search.png')" alt="" />
     <div class="dock-list">
-      <img v-for="item in list" :key="item.key" :src="item.dock" alt="" @click="recoveryAppWindow(item.key)">
+      <img v-for="item in list" :key="item.key" :src="calcDock(item)" alt="" @click="recoveryAppWindow(item.key)">
     </div>
     <img :src="require('@/assets/images/dock/dock-battery.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-network.png')" alt="" />
@@ -23,6 +23,10 @@ export default {
     }
   },
   methods: {
+    calcDock(item){
+      if(item.size == "mini") return item.dockBack
+      return item.dock
+    },
     recoveryAppWindow(key) {
       this.$emit("recoveryAppWindow", key)
     }

@@ -46,6 +46,7 @@ export default {
           url: "//music.gausszhou.top/netease/",
           shortcut: require("@/assets/images/shortcut/netease.png"),
           dock: require("@/assets/images/dock/dock-netease.png"),
+          dockBack: require("@/assets/images/dock/dock-netease-back.png"),
           size: "default" // mini default max
         }
       }
@@ -64,12 +65,8 @@ export default {
         let ZIndexMax = Math.max(...this.taskList.map((item) => item.z), 0)
         if (index == -1) {
           this.taskList.push({
+            ...app,
             key,
-            name: app.name,
-            url: app.url,
-            size: app.size,
-            dock: app.dock,
-            shortcut: app.shortcut,
             z: ZIndexMax + 1
           })
         } else {
@@ -78,7 +75,6 @@ export default {
       }
     },
     changeWindow(key, size) {
-      console.log(key, size)
       let index = this.taskList.findIndex((item) => (item.key = key))
       this.taskList[index].size = size
     },
