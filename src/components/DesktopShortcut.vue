@@ -6,7 +6,7 @@
       :key="index"
       :src="item.shortcut"
       alt=""
-      @click="openAppWindow(item.key)"
+      @dblclick="openAppWindow(item.key)"
     />
   </div>
 </template>

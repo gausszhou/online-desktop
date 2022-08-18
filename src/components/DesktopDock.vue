@@ -13,7 +13,10 @@
     <img :src="require('@/assets/images/dock/dock-battery.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-network.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-volume.png')" alt="" />
-    <img :src="require('@/assets/images/dock/dock-time.png')" alt="" />
+    <!-- <img :src="require('@/assets/images/dock/dock-time.png')" alt="" /> -->
+    <div style="color: #fff">
+      {{ time }}
+    </div>
     <img :src="require('@/assets/images/dock/dock-message.png')" alt="" />
   </div>
 </template>
@@ -27,7 +30,28 @@ export default {
       default: () => []
     }
   },
+  data() {
+    return {
+      time: new Date().toLocaleString().slice(10, 15),
+      timer: null
+    }
+  },
+  created() {
+    this.setTimer()
+  },
+  beforeDestroy() {
+    this.clearTimer()
+  },
   methods: {
+    setTimer() {
+      this.timer = setInterval(() => {
+        this.time = new Date().toLocaleString().slice(10, 15)
+      }, 10 * 1000)
+    },
+    clearTimer() {
+      clearInterval(this.timer)
+      this.timer = null
+    },
     calcDock(item) {
       if (item.runMode == "back") return item.dockBack
       if (item.runMode == "foreg") return item.dockForeg

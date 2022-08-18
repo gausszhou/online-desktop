@@ -4,13 +4,12 @@
     :drag-handle="'.drag-handle'"
     :draggable="true"
     :resizable="false"
+    class-name-dragging="dragging"
     :x="x"
     :y="y"
     :w="w"
     :h="h"
     :z="zIndex"
-    :min-width="0"
-    :min-height="0"
   >
     <div class="app-window">
       <TaskWindowHeader
