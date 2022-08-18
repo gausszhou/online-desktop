@@ -1,11 +1,11 @@
 <template>
   <div class="desktop-shortcut">
     <img
-      v-for="(shortcut, index) in shortcutList"
+      v-for="(item, index) in list"
       :key="index"
-      :src="shortcut.shortcut"
+      :src="item.shortcut"
       alt=""
-      @click="openAppWindow(shortcut.key)"
+      @click="openAppWindow(item.key)"
     />
   </div>
 </template>
@@ -14,7 +14,7 @@
 export default {
   name: "DesktopShortcut",
   props: {
-    shortcutList: {
+    list: {
       type: Array,
       default: () => []
     }

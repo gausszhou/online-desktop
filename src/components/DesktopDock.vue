@@ -2,7 +2,9 @@
   <div class="desktop-dock">
     <img :src="require('@/assets/images/dock/dock-windows.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-search.png')" alt="" />
-    <div class="dock-list"></div>
+    <div class="dock-list">
+      <img v-for="item in list" :key="item.key" :src="item.dock" alt="" @click="recoveryAppWindow(item.key)">
+    </div>
     <img :src="require('@/assets/images/dock/dock-battery.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-network.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-volume.png')" alt="" />
@@ -15,15 +17,14 @@
 export default {
   name: "DesktopDock",
   props: {
-    taskList: {
+    list: {
       type: Array,
       default: () => []
     }
   },
   methods: {
-    openAppWindow(app) {
-      const { key } = app
-      this.$emit("openAppWindow", key)
+    recoveryAppWindow(key) {
+      this.$emit("recoveryAppWindow", key)
     }
   }
 }

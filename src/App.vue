@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="desktop-background">
-    <DesktopShortcut :shortcutList="appList" @openAppWindow="openAppWindow" />
-    <DesktopDock :dockList="taskList" @openAppWindow="openAppWindow" />
+    <DesktopShortcut :list="appList" @openAppWindow="openAppWindow" />
+    <DesktopDock :list="taskList" @recoveryAppWindow="recoveryAppWindow" />
     <TaskWindow
       v-for="item in taskList"
       :key="item.key"
@@ -9,7 +9,9 @@
       :appName="item.name"
       :appUrl="item.url"
       :zIndex="item.z"
-      @closeAppWindow="closeAppWindow"
+      :size="item.size"
+      @changeSize="changeWindow"
+      @close="closeAppWindow"
     />
   </div>
 </template>
@@ -43,7 +45,8 @@ export default {
           name: "网易云音乐",
           url: "//music.gausszhou.top/netease/",
           shortcut: require("@/assets/images/shortcut/netease.png"),
-          dock: require("@/assets/images/dock/dock-netease.png")
+          dock: require("@/assets/images/dock/dock-netease.png"),
+          size: "default" // mini default max
         }
       }
     }
@@ -64,13 +67,24 @@ export default {
             key,
             name: app.name,
             url: app.url,
+            size: app.size,
+            dock: app.dock,
+            shortcut: app.shortcut,
             z: ZIndexMax + 1
           })
-          console.log(this.taskList)
         } else {
-          // sort to top
+          this.recoveryAppWindow(key)
         }
       }
+    },
+    changeWindow(key, size) {
+      console.log(key, size)
+      let index = this.taskList.findIndex((item) => (item.key = key))
+      this.taskList[index].size = size
+    },
+    recoveryAppWindow(key) {
+      let index = this.taskList.findIndex((item) => (item.key = key))
+      this.taskList[index].size = "default"
     },
     closeAppWindow(key) {
       this.taskList = this.taskList.filter((item) => item.key !== key)
