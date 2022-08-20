@@ -79,18 +79,21 @@ export default {
       console.log(this.taskList)
     },
     closeAppWindow(key) {
-
       this.taskList = this.taskList.filter((item) => item.key !== key)
     },
     changeSize(key, size) {
-      console.log(key, size)
-      let index = this.taskList.findIndex((item) => (item.key === key))
+      let index = this.taskList.findIndex((item) => item.key === key)
       this.taskList[index].size = size
     },
     changeRunMode(key, runMode) {
-      console.log(key, runMode)
-      const index = this.taskList.findIndex((item) => (item.key === key))
+      // 这一块逻辑有点复杂 // windows 专门有一个栈用于存储之前打开过的前台窗口
+      const index = this.taskList.findIndex((item) => item.key === key)
       this.taskList[index].runMode = runMode
+      if (runMode === "foreg") {
+        // 和当前最上层交换位置
+        let zIndexMax = Math.max(...this.taskList.map((item) => item.z))
+        this.$set(this.taskList[index],"z",zIndexMax+1)
+      }
     }
   }
 }

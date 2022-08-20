@@ -13,7 +13,6 @@
     <img :src="require('@/assets/images/dock/dock-battery.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-network.png')" alt="" />
     <img :src="require('@/assets/images/dock/dock-volume.png')" alt="" />
-    <!-- <img :src="require('@/assets/images/dock/dock-time.png')" alt="" /> -->
     <div style="color: #fff">
       {{ time }}
     </div>

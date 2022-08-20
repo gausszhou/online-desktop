@@ -93,6 +93,7 @@ export default {
   },
   mounted() {
     this.onWindowResize()
+    this.onSizeChagne()  // 调用一次
     window.addEventListener("resize", () => {
       this.onWindowResize()
     })
@@ -103,6 +104,7 @@ export default {
       this.windowHeight = window.innerHeight
     },
     onSizeChagne() {
+      console.log("size")
       const size = this.size
       const MAX_WIDTH = this.windowWidth
       const MAX_HEIGHT = this.windowHeight - 40
@@ -134,6 +136,7 @@ export default {
       this.back_h = this.h
     },
     onModeChange() {
+      console.log("mode")
       const index = this.index
       const mode = this.runMode
       const DOCK_WIDTH = 45
