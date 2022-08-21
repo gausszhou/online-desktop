@@ -1,20 +1,24 @@
 <template>
   <VueDragResize
     class-name-dragging="dragging"
+    class-name-resizing="resizing"
     :active="true"
     :drag-handle="'.drag-handle'"
     :draggable="true"
-    :resizable="false"
+    :resizable="true"
     :x="x"
     :y="y"
     :w="w"
     :h="h"
     :z="zIndex"
+    :min-width="min_w"
+    :min-height="min_h"
     @dragging="onDragging"
-    @dragstop="onDragstop"
+    @dragstop="onDragStop"
+    @resizing="onResizing"
+    @resizestop="onResizeStop"
   >
     <div class="app-window">
-      
       <TaskWindowHeader
         class="app-window-header"
         :name="appName"
@@ -24,7 +28,7 @@
         @close="close"
       />
       <div class="app-window-body">
-        <div class="app-window-mask" v-if="isDragging"></div>
+        <div class="app-window-mask" v-if="$store.state.isDragging || $store.state.isResizing"></div>
         <iframe :src="appUrl" width="100%" height="100%"></iframe>
       </div>
     </div>
@@ -78,9 +82,12 @@ export default {
       back_y: 0,
       back_w: 800,
       back_h: 600,
+      min_w: 800,
+      min_h: 450,
       windowWidth: 1920,
       windowHeight: 1080,
-      isDragging: false
+      isDragging: false,
+      isResizing: false
     }
   },
   watch: {
@@ -93,7 +100,7 @@ export default {
   },
   mounted() {
     this.onWindowResize()
-    this.onSizeChagne()  // 调用一次
+    this.onSizeChagne() // 调用一次
     window.addEventListener("resize", () => {
       this.onWindowResize()
     })
@@ -142,10 +149,10 @@ export default {
       const DOCK_WIDTH = 45
       const MAX_HEIGHT = this.windowHeight - 40
       if (mode == "back") {
-        this.x = DOCK_WIDTH * (index + 3)
-        this.y = MAX_HEIGHT
-        this.w = 1
-        this.h = 1
+        // this.x = DOCK_WIDTH * (index + 3)
+        // this.y = MAX_HEIGHT + 1
+        // this.x = -(this.w + 3)
+        this.y =  MAX_HEIGHT + 3
       } else {
         this.x = this.back_x
         this.y = this.back_y
@@ -155,11 +162,25 @@ export default {
     },
     onDragging() {
       this.isDragging = true
+      this.$store.commit("setIsDragging",this.isDragging)
     },
-    onDragstop(x, y) {
+    onDragStop(x, y) {
       this.isDragging = false
+      this.$store.commit("setIsDragging",this.isDragging)
       this.back_x = x
       this.back_y = y
+    },
+    onResizing() {
+      this.isResizing = true
+      this.$store.commit("setIsResizing",this.isResizing)
+    },
+    onResizeStop(x, y, w, h) {
+      this.isResizing = false
+      this.$store.commit("setIsResizing",this.isResizing)
+      this.back_x = x
+      this.back_y = y
+      this.back_w = w
+      this.back_h = h
     },
     minimize() {
       this.$emit("changeRunMode", this.appKey, "back")
@@ -179,7 +200,7 @@ export default {
 <style lang="scss" scoped>
 .app-window {
   width: 100%;
-height: 100%;
+  height: 100%;
 }
 .app-window-body {
   height: 100%;
@@ -195,5 +216,4 @@ height: 100%;
   height: 100%;
   z-index: 999;
 }
-
 </style>

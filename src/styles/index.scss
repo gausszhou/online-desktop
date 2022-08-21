@@ -10,11 +10,13 @@
 }
 
 .vue-drr-box {
+  transition: transform .3s ease-out;
   border: none !important;
-  transition: all .3s ease-out;
+  box-shadow: 1px 1px 4px 1px #cccccc77,-1px -1px 4px 1px #cccccc77;
 }
 
-.vue-drr-box.dragging{
+.vue-drr-box.dragging,
+.vue-drr-box.resizing {
   transition: none;
 }
 
@@ -34,6 +36,7 @@
     width: 74px;
     margin-top: 16px;
     padding-top: 16px;
+
     &:hover,
     &:active {
       box-shadow: 0 0 1px 2px #58acb5;
@@ -46,6 +49,7 @@
   .icon-image {
     width: 100%;
   }
+
   .icon-text {
     color: #f1f1f1;
     font-size: 13px;
