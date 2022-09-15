@@ -43,7 +43,7 @@ export default {
         {
           key: "netease",
           name: "网易云音乐",
-          url: "//www.gausszhou.top/online-music/",
+          url: "//gausszhou.github.io/online-music/",
           shortcut: require("@/assets/images/shortcut/netease.png"),
           dockForeg: require("@/assets/images/dock/dock-netease-foreg.png"),
           dockBack: require("@/assets/images/dock/dock-netease-back.png"),
@@ -53,7 +53,7 @@ export default {
         {
           key: "gausszhou",
           name: "我的笔记",
-          url: "//www.gausszhou.top/",
+          url: "//gausszhou.github.io/",
           shortcut: require("@/assets/images/shortcut/chrome.png"),
           dockForeg: require("@/assets/images/dock/dock-chrome-foreg.png"),
           dockBack: require("@/assets/images/dock/dock-chrome-back.png"),
